@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <main>
+      <section id="chat">
+        <div class="bubble" v-for="(item,index) in allMessages" v-bind:key="index">
+          <h4>{{item.user}}</h4>
+          <p>{{item.msg}}</p>
+        </div>
+      </section>
+      <aside id="online">
+        <div class="user" v-for="(user,index) in onlineUsers" :key ="index">
+          <h5>{{user.name}}</h5>
+          <p>{{user.status }}</p>
+        </div>
+      </aside>
+    </main>
+    <section>
+      <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage">
+      <button @click="sendMessage">Send</button>
+    </section>
+  </div>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>  -->
+  <!-- ovo nam treba da mozemo da koristimo client stranu-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+
+    var app = new Vue({
+      el:'#app',
+      data() {
+        return {
+          helloMessage:"Hello there!",
+          myUsername:'',
+          onlineUsers:
+          [
+            {
+              name:'User 1',
+              status:'online'
+            },
+            {
+              name:'User 2',
+              status:'online'
+            },
+            {
+              name:'User 3',
+              status:'online'
+            }
+          ],
+          inputMessage:'',
+          allMessages:
+          [
+            {
+              user:'neki user',
+              msg:'neka poruka'
+            },
+            {
+              user:'neki user2',
+              msg:'neka poruka2'
+            },
+            {
+              user:'neki user3',
+              msg:'neka poruka3'
+            }
+          ]
+        }
+      },
+      methods: {
+        sendMessage(){
+          socket.emit('chat-message',{
+            user: this.myUsername,
+            msg: this.inputMessage
+          })
+          this.inputMessage = '';
+        }
+      },
+      mounted(){
+        this.myUsername = prompt ('What is your username');
+        this.onlineUsers.push({
+          name:this.myUsername,
+          status:prompt('What\'s on your  mind?')
+        })
+        document.getElementById('input').focus(); //odmah fokusiran input element
+
+        socket.on('connect',(server)=>{
+          alert('Connected to socket.')
+          socket.on('send-message-all',(data)=>{
+            console.log(data)
+            this.allMessages.push({
+              user: data.user,
+              msg: data.msg
+            });
+          })
+        })
+      }
+    })
+  </script>
+</body>
+</html>
