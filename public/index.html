@@ -22,7 +22,7 @@
         </div>
       </aside>
     </main>
-    <section>
+    <section id="type-area">
       <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage">
       <button @click="sendMessage">Send</button>
     </section>
@@ -40,68 +40,72 @@
         return {
           helloMessage:"Hello there!",
           myUsername:'',
-          onlineUsers:
-          [
-            {
-              name:'User 1',
-              status:'online'
-            },
-            {
-              name:'User 2',
-              status:'online'
-            },
-            {
-              name:'User 3',
-              status:'online'
-            }
-          ],
+          status:'',
+          onlineUsers:[],
           inputMessage:'',
-          allMessages:
-          [
-            {
-              user:'neki user',
-              msg:'neka poruka'
-            },
-            {
-              user:'neki user2',
-              msg:'neka poruka2'
-            },
-            {
-              user:'neki user3',
-              msg:'neka poruka3'
-            }
-          ]
+          allMessages:[]
         }
       },
       methods: {
-        sendMessage(){
+        validateUsername: function(){
+          this.myUsername = prompt ('What is your username');
+          if(this.myUsername == null || this.myUsername == '' || this.myUsername == ' '){
+            this.validateUsername();
+          }
+        },
+        sendMessage: function(){
           socket.emit('chat-message',{
             user: this.myUsername,
             msg: this.inputMessage
           })
           this.inputMessage = '';
+
+          var chat = document.getElementById('chat')
+          console.log('scroppTop' + chat.scrollTop)
+          console.log('chat.scrollHeight'+chat.scrollHeight)
+        },
+        scrollToBottom: function(){
+          var chat = document.getElementById('chat');
+          if(chat.scrollTop > chat.scrollHeight - chat.clientHeight - 400){ //predji opet kako ovo radi
+            chat.scrollTop = chat.scrollHeight; 
+          }
         }
       },
-      mounted(){
-        this.myUsername = prompt ('What is your username');
-        this.onlineUsers.push({
-          name:this.myUsername,
-          status:prompt('What\'s on your  mind?')
-        })
+      mounted(){ //mozda da ovo bude before mount ?
+        this.validateUsername()
+        this.status = prompt('What is on your mind?');
         document.getElementById('input').focus(); //odmah fokusiran input element
 
         socket.on('connect',(server)=>{
-          alert('Connected to socket.')
+
+          socket.emit('new-user', {
+            name: this.myUsername,
+            status: this.status
+          })
+
+          socket.on('username-taken',(data)=>{
+            alert('Username ' + data + ' is taken.');
+            socket.emit('new-user',{
+              name: prompt('Pick another user name'),
+              status: this.status //status ostaje isti
+            })
+          })
+
+          socket.on('new-user-online',(data)=>{
+            this.onlineUsers = data //menjamo nas array sa arrayom koji nam je stigao
+          })
+
           socket.on('send-message-all',(data)=>{
             console.log(data)
             this.allMessages.push({
               user: data.user,
               msg: data.msg
             });
-            //window.scrollTo(0,document.body.scrollHeight); //kako da implementiram ovo ?
-            //document.body.scrollTop = document.body.scrollHeight
           })
         })
+      },
+      updated(){
+        this.scrollToBottom()
       }
     })
   </script>
