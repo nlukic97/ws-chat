@@ -11,6 +11,7 @@ http.listen(port,function(){
 })
 
 var allUsers = []; //ovo mora biti globalna varijabla
+var typing = [];
 
 io.on('connection',(socket)=>{
   var clientId = socket.id; //ovde definises id za svaki pojedinacnu konekciju
@@ -45,6 +46,35 @@ io.on('connection',(socket)=>{
         }
       }
     })
+  })
+
+  //kucanje
+  socket.on('user-typing',(data)=>{
+    var alreadyTyping = false;
+    for(var i = 0; i < typing.length; i++){
+      if(typing[i] == data.userTyping){
+        alreadyTyping = true;
+      }
+    }
+
+    //ovo mora da se nalazi van for loopa. Da bi se jednom desilo.
+    if(alreadyTyping == false){
+      typing.push(data.userTyping)
+    }
+    console.log(typing)
+    io.emit('users-typing',typing)
+
+  })
+
+  socket.on('user-not-typing',(data)=>{
+    for(var i = 0; i < typing.length; i++){
+      if(typing[i] == data.userNotTyping){
+        typing.splice(i,1)
+      }
+    }
+
+    console.log(typing);
+    io.emit('users-typing',typing)
   })
 
   socket.on('chat-message',(data)=>{

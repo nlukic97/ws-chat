@@ -1,6 +1,6 @@
 body, html {
   margin: 0;
-  height: 100vh; /*ovde si stavio 100%, i to je pravilo problem da ne moze text da se breakuje*/
+  height: 100%; /*ovde si stavio 100%, i to je pravilo problem da ne moze text da se breakuje*/
   overflow:hidden;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -66,7 +66,7 @@ main {
   border-radius: 15px;
   display: inline-block;
   padding:10px 20px;
-  overflow: break-word;
+  word-break: break-all; /* ovo je da se rec prelomi gde god treba */
 }
 
 #chat h4 {

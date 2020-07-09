@@ -25,7 +25,8 @@
       </aside>
     </main>
     <section id="type-area">
-      <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage">
+      <p v-if="areTyping">Typing...<span v-for="(typer,index) in currentlyTyping" :key="index">{{typer}}</span></p>
+      <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage" @keydown="iAmTyping">
       <button @click="sendMessage">Send</button>
     </section>
   </div>
@@ -36,16 +37,20 @@
   <script>
     var socket = io();
 
+    var timer;
+
     var app = new Vue({
       el:'#app',
       data() {
         return {
-          helloMessage:"Hello there!",
           myUsername:'',
           status:'',
           onlineUsers:[],
           inputMessage:'',
-          allMessages:[]
+          allMessages:[],
+          currentlyTyping:[],
+          areTyping: false,
+          typingTimer:0
         }
       },
       methods: {
@@ -55,6 +60,28 @@
             this.validateUsername();
           }
         },
+
+        iAmTyping: function(){
+          socket.emit('user-typing',{
+            userTyping: this.myUsername
+          })
+          this.typingTimer = 0;
+          clearInterval(timer)
+
+          timer = setInterval(()=>{
+            this.typingTimer = this.typingTimer + 1;
+            if(this.typingTimer >= 3){
+              socket.emit('user-not-typing',{
+                userNotTyping: this.myUsername
+              })
+              this.typingTimer = 0;
+              clearInterval(timer)
+            } else {
+              this.typingTimer++;
+            }
+          },300)
+        },
+
         sendMessage: function(){
           socket.emit('chat-message',{
             user: this.myUsername,
@@ -66,6 +93,7 @@
           console.log('scroppTop' + chat.scrollTop)
           console.log('chat.scrollHeight'+chat.scrollHeight)
         },
+
         scrollToBottom: function(){
           var chat = document.getElementById('chat');
           if(chat.scrollTop > chat.scrollHeight - chat.clientHeight - 400){ //predji opet kako ovo radi
@@ -96,6 +124,16 @@
 
           socket.on('new-user-online',(data)=>{
             this.onlineUsers = data //menjamo nas array sa arrayom koji nam je stigao
+          })
+
+          socket.on('users-typing',(data)=>{
+            this.currentlyTyping = data;
+            if(this.currentlyTyping[0]){
+              this.areTyping = true;
+            } else {
+              this.areTyping = false;
+            }
+            console.log(this.currentlyTyping)
           })
 
           socket.on('send-message-all',(data)=>{
