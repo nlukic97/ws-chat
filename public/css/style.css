@@ -1,6 +1,6 @@
-body, html, #app {
+body, html {
   margin: 0;
-  height: 100%;
+  height: 100vh; /*ovde si stavio 100%, i to je pravilo problem da ne moze text da se breakuje*/
   overflow:hidden;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -56,13 +56,14 @@ main {
 
 .bubble {
   margin: 0 0 10px 10px;
+  max-width: 80%;
 }
 
 #chat p {
   margin:0;
   background-color: #00843D;
   color:#fff;
-  border-radius: 20px;
+  border-radius: 15px;
   display: inline-block;
   padding:10px 20px;
   overflow: break-word;
