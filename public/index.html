@@ -16,7 +16,9 @@
         </div>
       </section>
       <aside id="online">
+        <h4>Online users</h4>
         <div class="user" v-for="(user,index) in onlineUsers" :key ="index">
+          <div class="circle"></div>
           <h5>{{user.name}}</h5>
           <p>{{user.status }}</p>
         </div>
@@ -85,9 +87,10 @@
 
           socket.on('username-taken',(data)=>{
             alert('Username ' + data + ' is taken.');
+            this.validateUsername()
             socket.emit('new-user',{
-              name: prompt('Pick another user name'),
-              status: this.status //status ostaje isti
+              name: this.myUsername, // <--------------------- da li treba da se validira username ipak ?
+              status: this.status //status ostaje isti  
             })
           })
 

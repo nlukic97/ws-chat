@@ -13,19 +13,18 @@ http.listen(port,function(){
 var allUsers = []; //ovo mora biti globalna varijabla
 
 io.on('connection',(socket)=>{
-
   var clientId = socket.id; //ovde definises id za svaki pojedinacnu konekciju
 
   socket.on('new-user',(data)=>{
-    var userExists = false;
+    var userExists = false; //stavimo da korisnik ne postoji
     for(var i = 0; i < allUsers.length; i++){
       if(allUsers[i].name == data.name){
-        userExists = true;
+        userExists = true; //ako postoji, onda naznacimo da postoji i javimo to klijentu.
         socket.emit('username-taken',data.name)
       }
     }
 
-    if(!userExists){
+    if(!userExists){ //kada se ponovo posalje new-user, ako gornji loop ne vrati da korisnik postoji, dodaj ga u allUsers (zajedno sa id-om koji smo definisali u var clientId)
       console.log('A new user joined - ' + data.name);
       allUsers.push({
         name: data.name,
@@ -48,11 +47,9 @@ io.on('connection',(socket)=>{
     })
   })
 
-  // allUsers.forEach --> on disconnect
-
   socket.on('chat-message',(data)=>{
     console.log(data)
-    io.emit('send-message-all',data)
+    io.emit('send-message-all',data) //io.emit salje svima
   })
 
 })

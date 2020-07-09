@@ -1,7 +1,8 @@
-body, html {
+body, html, #app {
   margin: 0;
   height: 100%;
   overflow:hidden;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -12,6 +13,8 @@ main {
   border:1px solid #333;
 }
 
+
+
 #online {
   width:200px;
   height: auto;
@@ -20,12 +23,26 @@ main {
   top:0;
 }
 
+#online h4 {
+  text-align: center;
+}
+
+.circle {
+  height:13px;
+  width:13px;
+  margin-right: 3px;
+  border-radius: 50%;
+  background-color: rgb(14, 200, 14);
+  display: inline-block;
+}
+
 #online h5 {
   margin:0;
+  display: inline;
 }
 
 #online p {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px 22px;
 }
 
 #chat {
@@ -35,6 +52,25 @@ main {
   margin-right: 200px;
   padding-bottom: 30px;
   box-sizing: border-box;
+}
+
+.bubble {
+  margin: 0 0 10px 10px;
+}
+
+#chat p {
+  margin:0;
+  background-color: #00843D;
+  color:#fff;
+  border-radius: 20px;
+  display: inline-block;
+  padding:10px 20px;
+  overflow: break-word;
+}
+
+#chat h4 {
+  margin:0;
+  padding:5px 0 0 10px;
 }
 
 #type-area {
