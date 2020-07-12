@@ -133,7 +133,8 @@
 
               var length = this.currentlyTyping.length;
               //resenje za , i & kod typing:
-              if(length > 1){
+              if(length > 1 && length < 5){
+
                 for(var x = 1; x < length; x++){
                   if(x == length - 1){
                     this.currentlyTyping[x] = ' & ' + this.currentlyTyping[x]
@@ -141,6 +142,9 @@
                     this.currentlyTyping[x] = ', ' + this.currentlyTyping[x]
                   }
                 }
+              } else if(length >= 5) {
+                var answer = length + ' users are typing.'
+                this.currentlyTyping = {answer}
               }
 
             } else {
