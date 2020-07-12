@@ -56,14 +56,12 @@ io.on('connection',(socket)=>{
         alreadyTyping = true;
       }
     }
-
-    //ovo mora da se nalazi van for loopa. Da bi se jednom desilo.
-    if(alreadyTyping == false){
+    //ovo mora da se nalazi van for loopa. Da bi se jednom desilo. Zato nije u else if, je bi bilo u loop-u
+    if(alreadyTyping == false){  
       typing.push(data.userTyping)
     }
     console.log(typing)
     io.emit('users-typing',typing)
-
   })
 
   socket.on('user-not-typing',(data)=>{
