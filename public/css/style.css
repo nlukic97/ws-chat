@@ -59,6 +59,10 @@ main {
   max-width: 80%;
 }
 
+.bubble:last-child {
+  margin-bottom: 50px;
+}
+
 #chat p {
   margin:0;
   background-color: #00843D;
@@ -79,4 +83,27 @@ main {
   bottom: 0;
   left:0;
   width: 100%;
+  /* background:red; */
+}
+
+#type-area p {
+  margin:5px;
+  padding:0;
+}
+
+#type-area div {
+  display: flex;
+  /* border:1px solid #333; */
+  width: calc(100% - 220px);
+  justify-content: space-around;
+}
+
+#type-area input {
+  height:30px;
+  width: 100%;
+}
+
+#type-area button {
+  width:10%;
+  min-width: 70px;
 }

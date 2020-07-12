@@ -26,8 +26,10 @@
     </main>
     <section id="type-area">
       <p v-if="areTyping">Typing: <span v-for="(typer,index) in currentlyTyping" :key="index">{{typer}}</span></p>
-      <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage" @keydown="iAmTyping">
-      <button @click="sendMessage">Send</button>
+      <div>
+        <input id="input" v-model="inputMessage" type="text" @keyup.enter="sendMessage" @keydown="iAmTyping">
+        <button @click="sendMessage">Send</button>
+      </div>
     </section>
   </div>
   <!-- <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>  -->
