@@ -10,6 +10,7 @@
   <div id="app">
     <main>
       <section id="chat">
+        <h1 v-html="myHtml()"></h1>
         <div class="bubble" v-for="(item,index) in allMessages" v-bind:key="index">
           <h4>{{item.user}}</h4>
           <p>{{item.msg}}</p>
@@ -52,10 +53,18 @@
           allMessages:[],
           currentlyTyping:[],
           areTyping: false,
-          typingTimer:0
+          typingTimer:0,
+          hasHtml:false //if this is true, myHtml function gives something different
         }
       },
       methods: {
+        myHtml: function(){
+          if(this.hasHtml){
+            return "<span style='color:red;'>This is a red span</span>";
+          } else {
+            return "This is not a span";
+          }
+        },
         validateUsername: function(){
           this.myUsername = prompt ('What is your username');
           if(this.myUsername == null || this.myUsername == '' || this.myUsername == ' '){

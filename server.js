@@ -2,7 +2,7 @@ var express = require('express');
 var app = express()
 var http = require('http').createServer(app);
 var io = require('socket.io')(http)
-var port = 3000;
+var port = 3200;
 
 app.use(express.static('./public'))
 
